@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: init-db
+  namespace: skymap
+spec:
+  template:
+    spec:
+      containers:
+        - name: init-db
+          image: sky_map-init-db:latest
+          imagePullPolicy: Never
+          env:
+            - name: DB_HOST
+              value: mariadb
+            - name: DB_USER
+              value: root
+            - name: DB_PASS
+              value: yourpassword
+            - name: DB_DATABASE
+              value: skymap
+      restartPolicy: OnFailure
+

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: skymap
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: sky_map-frontend:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 4000
+          env:
+            - name: VITE_API_URL
+              value: http://api:8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: skymap
+spec:
+  selector:
+    app: frontend
+  ports:
+    - port: 4000
+      targetPort: 4000
+
