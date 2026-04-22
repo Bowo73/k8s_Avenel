@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-cd
+  namespace: skymap
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend-cd
+  template:
+    metadata:
+      labels:
+        app: frontend-cd
+    spec:
+      containers:
+        - name: frontend
+          image: sky_map-frontend:latest
+          imagePullPolicy: Never
+          command: ["serve"]
+          args: ["-s", "dist", "-l", "4000"]
+          ports:
+            - containerPort: 4000
