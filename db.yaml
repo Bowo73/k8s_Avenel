@@ -31,13 +31,25 @@ spec:
           imagePullPolicy: IfNotPresent
           env:
             - name: MARIADB_ROOT_PASSWORD
-              value: changeme
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: root-password
             - name: MARIADB_DATABASE
-              value: sky_map
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: db-name
             - name: MARIADB_USER
-              value: sky
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: db-user
             - name: MARIADB_PASSWORD
-              value: changeme
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: db-password
           ports:
             - containerPort: 3306
           volumeMounts:
@@ -58,4 +70,3 @@ spec:
     app: db
   ports:
     - port: 3306
-

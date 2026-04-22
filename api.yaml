@@ -22,11 +22,20 @@ spec:
             - name: DB_HOST
               value: db
             - name: DB_USER
-              value: root
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: db-user
             - name: DB_PASS
-              value: yourpassword
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: db-password
             - name: DB_DATABASE
-              value: skymap
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: db-name
 
       containers:
         - name: api
@@ -38,11 +47,20 @@ spec:
             - name: DB_HOST
               value: db
             - name: DB_USER
-              value: root
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: db-user
             - name: DB_PASS
-              value: yourpassword
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: db-password
             - name: DB_DATABASE
-              value: skymap
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: db-name
 
 ---
 apiVersion: v1
@@ -57,4 +75,3 @@ spec:
     - port: 8000
       targetPort: 8000
   type: ClusterIP
-

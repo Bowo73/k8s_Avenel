@@ -14,10 +14,18 @@ spec:
             - name: DB_HOST
               value: db
             - name: DB_USER
-              value: sky
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: db-user
             - name: DB_PASS
-              value: changeme
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: db-password
             - name: DB_DATABASE
-              value: sky_map
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: db-name
       restartPolicy: OnFailure
-
