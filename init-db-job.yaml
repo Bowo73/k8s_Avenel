@@ -12,12 +12,12 @@ spec:
           imagePullPolicy: Never
           env:
             - name: DB_HOST
-              value: mariadb
+              value: db
             - name: DB_USER
-              value: root
+              value: sky
             - name: DB_PASS
-              value: yourpassword
+              value: changeme
             - name: DB_DATABASE
-              value: skymap
+              value: sky_map
       restartPolicy: OnFailure
 

@@ -6,7 +6,8 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    - http:
+    - host: skymap.local
+      http:
         paths:
           - path: /api
             pathType: Prefix
@@ -15,7 +16,6 @@ spec:
                 name: api
                 port:
                   number: 8000
-
           - path: /
             pathType: Prefix
             backend:

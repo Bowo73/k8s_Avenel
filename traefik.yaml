@@ -1,3 +1,4 @@
+apiVersion: v1 
 kind: Service
 metadata:
   name: traefik
@@ -5,9 +6,8 @@ metadata:
 spec:
   type: NodePort   # 👈 ADD THIS LINE
   selector:
-    app: traefik
+    app.kubernetes.io/name: traefik
   ports:
     - port: 80
       targetPort: 80
-      nodePort: 30080   # optional but recommended
 

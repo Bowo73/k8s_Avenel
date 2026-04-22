@@ -13,28 +13,37 @@ spec:
       labels:
         app: api
     spec:
+      initContainers:
+        - name: migrate
+          image: sky_map-api:latest
+          imagePullPolicy: Never
+          command: ["sh", "-c", "sleep 10 && python manage.py migrate"]
+          env:
+            - name: DB_HOST
+              value: db
+            - name: DB_USER
+              value: root
+            - name: DB_PASS
+              value: yourpassword
+            - name: DB_DATABASE
+              value: skymap
+
       containers:
         - name: api
           image: sky_map-api:latest
           imagePullPolicy: Never
-          command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
           ports:
             - containerPort: 8000
           env:
-            - name: PYTHONDONTWRITEBYTECODE
-              value: "1"
-            - name: PYTHONUNBUFFERED
-              value: "1"
-            - name: MYSQL_HOST
+            - name: DB_HOST
               value: db
-            - name: MYSQL_PORT
-              value: "3306"
-            - name: MYSQL_DATABASE
-              value: sky_map
-            - name: MYSQL_USER
-              value: sky
-            - name: MYSQL_PASSWORD
-              value: changeme
+            - name: DB_USER
+              value: root
+            - name: DB_PASS
+              value: yourpassword
+            - name: DB_DATABASE
+              value: skymap
+
 ---
 apiVersion: v1
 kind: Service
@@ -47,4 +56,5 @@ spec:
   ports:
     - port: 8000
       targetPort: 8000
+  type: ClusterIP
 

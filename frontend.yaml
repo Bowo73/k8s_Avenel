@@ -29,9 +29,10 @@ metadata:
   name: frontend
   namespace: skymap
 spec:
+  type: NodePort
   selector:
     app: frontend
   ports:
     - port: 4000
       targetPort: 4000
-
+      nodePort: 30080
