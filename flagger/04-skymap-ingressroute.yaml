@@ -1,0 +1,21 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: skymap
+  namespace: skymap
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`skymap.local`) && PathPrefix(`/api`)
+      kind: Rule
+      services:
+        - name: api
+          kind: TraefikService
+          port: 80
+    - match: Host(`skymap.local`)
+      kind: Rule
+      services:
+        - name: frontend
+          kind: TraefikService
+          port: 80

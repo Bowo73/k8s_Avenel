@@ -1,0 +1,26 @@
+apiVersion: flagger.app/v1beta1
+kind: MetricTemplate
+metadata:
+  name: traefik-success-rate-skymap
+  namespace: skymap
+spec:
+  provider:
+    type: prometheus
+    address: http://flagger-prometheus.traefik:9090
+  query: |
+    sum(
+      rate(
+        traefik_service_requests_total{
+          service=~"{{ namespace }}-{{ target }}-(primary|canary)-.*@kubernetescrd",
+          code!~"5..",
+        }[{{ interval }}]
+      )
+    )
+    /
+    sum(
+      rate(
+        traefik_service_requests_total{
+          service=~"{{ namespace }}-{{ target }}-(primary|canary)-.*@kubernetescrd"
+        }[{{ interval }}]
+      )
+    ) * 100

@@ -17,6 +17,11 @@ spec:
         - name: frontend
           image: sky_map-frontend:latest
           imagePullPolicy: Never
+          # The frontend image is built with `dist/` already.
+          # Run a static server instead of Vite dev server so Ingress hosts
+          # like `skymap.local` are accepted (Vite blocks unknown hosts).
+          command: ["serve"]
+          args: ["-s", "dist", "-l", "4000"]
           ports:
             - containerPort: 4000
           env:

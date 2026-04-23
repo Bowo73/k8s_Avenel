@@ -1,0 +1,19 @@
+service:
+  type: NodePort
+
+ports:
+  web:
+    nodePort: 32080
+  websecure:
+    nodePort: 32443
+
+# Expose Traefik metrics for Flagger analysis.
+deployment:
+  podAnnotations:
+    prometheus.io/port: "9100"
+    prometheus.io/scrape: "true"
+    prometheus.io/path: "/metrics"
+
+metrics:
+  prometheus:
+    entryPoint: metrics

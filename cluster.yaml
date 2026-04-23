@@ -8,3 +8,12 @@ nodes:
       - containerPort: 30080
         hostPort: 30080
         protocol: TCP
+      # Expose Traefik NodePorts on the host so Ingress
+      # works without port-forward.
+      - containerPort: 32080
+        hostPort: 8080
+        protocol: TCP
+      - containerPort: 32443
+        hostPort: 8443
+        protocol: TCP
+  - role: worker

@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-cd
+  namespace: skymap
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-cd
+  template:
+    metadata:
+      labels:
+        app: api-cd
+    spec:
+      initContainers:
+        - name: migrate
+          image: sky_map-api:latest
+          imagePullPolicy: Never
+          command: ["sh", "-c", "sleep 10 && python manage.py migrate --noinput"]
+          env:
+            - name: DB_HOST
+              value: db
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: db-user
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: db-password
+            - name: DB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: db-name
+            - name: DJANGO_ALLOWED_HOSTS
+              value: localhost,127.0.0.1,skymap.local,canary.skymap.local
+            - name: DJANGO_CORS_ALLOWED_ORIGINS
+              value: http://localhost:4000,http://127.0.0.1:4000,http://skymap.local:8080,http://canary.skymap.local:8080
+            - name: DJANGO_CSRF_TRUSTED_ORIGINS
+              value: http://skymap.local:8080,http://canary.skymap.local:8080
+
+      containers:
+        - name: api
+          image: sky_map-api:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DB_HOST
+              value: db
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: db-user
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: db-password
+            - name: DB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: db-name
+            - name: DJANGO_ALLOWED_HOSTS
+              value: localhost,127.0.0.1,skymap.local,canary.skymap.local
+            - name: DJANGO_CORS_ALLOWED_ORIGINS
+              value: http://localhost:4000,http://127.0.0.1:4000,http://skymap.local:8080,http://canary.skymap.local:8080
+            - name: DJANGO_CSRF_TRUSTED_ORIGINS
+              value: http://skymap.local:8080,http://canary.skymap.local:8080

@@ -1,0 +1,20 @@
+apiVersion: flagger.app/v1beta1
+kind: MetricTemplate
+metadata:
+  name: traefik-duration-p99-ms-api-cd
+  namespace: skymap
+spec:
+  provider:
+    type: prometheus
+    address: http://flagger-prometheus.traefik:9090
+  query: |
+    histogram_quantile(
+      0.99,
+      sum(
+        rate(
+          traefik_service_request_duration_seconds_bucket{
+            service=~"skymap-api-cd-flagger-(primary|canary)-.*@kubernetescrd"
+          }[{{ interval }}]
+        )
+      ) by (le)
+    ) * 1000

@@ -1,0 +1,38 @@
+apiVersion: flagger.app/v1beta1
+kind: Canary
+metadata:
+  name: api
+  namespace: skymap
+spec:
+  provider: traefik
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: api
+  progressDeadlineSeconds: 300
+  service:
+    port: 80
+    targetPort: 8000
+  analysis:
+    interval: 20s
+    threshold: 5
+    maxWeight: 50
+    stepWeight: 5
+    metrics:
+      - name: request-success-rate
+        interval: 1m
+        thresholdRange:
+          min: 99
+      - name: request-duration
+        interval: 1m
+        thresholdRange:
+          max: 4000
+    webhooks:
+      - name: smoke-test
+        type: pre-rollout
+        url: http://flagger-loadtester.skymap/
+        timeout: 10s
+        metadata:
+          type: cmd
+          cmd: "curl -sf -H 'Host: skymap.local' http://traefik.traefik/api/sky/cities/ | head -c 1 >/dev/null"
+          logCmdOutput: "true"

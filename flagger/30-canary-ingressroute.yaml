@@ -1,0 +1,21 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: skymap-canary
+  namespace: skymap
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`canary.skymap.local`) && PathPrefix(`/api`)
+      kind: Rule
+      services:
+        - name: api-cd-flagger
+          kind: TraefikService
+          port: 80
+    - match: Host(`canary.skymap.local`)
+      kind: Rule
+      services:
+        - name: frontend-cd-flagger
+          kind: TraefikService
+          port: 80
